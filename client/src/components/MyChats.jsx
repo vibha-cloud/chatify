@@ -8,7 +8,6 @@ import {
   Avatar,
   useToast,
   Tooltip,
-  useDisclosure,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { AddIcon } from "@chakra-ui/icons";
@@ -19,8 +18,7 @@ import { TbLogout2 } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 
 const MyChats = ({ fetchAgain }) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const [loggedUser, setLoggedUser] = useState(false);
+  const [loggedUser, setLoggedUser] = useState(null);
   const { selectedChat, setSelectedChat, user, chats, setChats } = ChatState();
   const toast = useToast();
   const navigate = useNavigate();
@@ -31,10 +29,12 @@ const MyChats = ({ fetchAgain }) => {
   };
 
   const fetchChats = async () => {
+    if (!loggedUser) return;
+
     try {
       const config = {
         headers: {
-          Authorization: `Bearer ${user.token}`,
+          Authorization: `Bearer ${loggedUser.token}`,
         },
       };
 
@@ -52,9 +52,23 @@ const MyChats = ({ fetchAgain }) => {
   };
 
   useEffect(() => {
-    setLoggedUser(JSON.parse(localStorage.getItem("userInfo")));
-    fetchChats();
-  }, [fetchAgain]);
+    const storedUser = JSON.parse(localStorage.getItem("userInfo"));
+    if (storedUser) {
+      setLoggedUser(storedUser);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (loggedUser) {
+      fetchChats(); // Fetch chats as soon as loggedUser is available
+    }
+  }, [loggedUser]);
+
+  useEffect(() => {
+    if (loggedUser && fetchAgain !== undefined) {
+      fetchChats(); // Fetch chats whenever fetchAgain changes
+    }
+  }, [fetchAgain, loggedUser]);
 
   return (
     <Box

@@ -4,7 +4,8 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "start": "nodemon server/server.js",
+    "dev": "nodemon server/server.js",
+    "start": "node server/server.js",
     "build": "npm install && npm install --prefix client && npm run build --prefix client"
   },
   "author": "Vibha",
