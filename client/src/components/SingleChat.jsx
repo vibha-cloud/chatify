@@ -25,7 +25,7 @@ import { TiMessages } from "react-icons/ti";
 import EmojiPicker from "emoji-picker-react";
 import { BsEmojiSmile } from "react-icons/bs";
 
-const ENDPOINT = "http://localhost:5000";
+const ENDPOINT = "https://chatify-mern-chat-app.onrender.com";
 let socket;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
